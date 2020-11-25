@@ -1,11 +1,6 @@
 package spike
 
 import io.kotest.matchers.shouldBe
-import org.apache.poi.ss.util.CellReference
-import org.apache.poi.xssf.usermodel.XSSFCell
-import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator
-import org.apache.poi.xssf.usermodel.XSSFSheet
-import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
@@ -14,38 +9,18 @@ class SpikeTest {
 
     @Test
     fun `the spreadsheet defaults to 6`() {
-        val (sheet, evaluator) = sheet()
-        val d2 = getCell(sheet, "D2")
+        val sheet = TestSheet("/SimpleMath.xlsx")
 
-        valueOf(evaluator, d2).shouldBe(6.0)
+        sheet.number("D2").shouldBe(6.0)
     }
 
     @Test
     fun `7 plus 9 = 16`() {
-        val (sheet, evaluator) = sheet()
-        val b2 = getCell(sheet, "B2")
-        val c2 = getCell(sheet, "C2")
-        val d2 = getCell(sheet, "D2")
+        val sheet = TestSheet("/SimpleMath.xlsx")
 
-        b2.setCellValue(7.0)
-        c2.setCellValue(9.0)
-        valueOf(evaluator, d2).shouldBe(16.0)
-    }
+        sheet.set("B2", 7)
+        sheet.set("C2", 9)
 
-    private fun getCell(sheet: XSSFSheet, ref: String): XSSFCell {
-        val cellReference = CellReference(ref)
-        return sheet
-                .getRow(cellReference.row)
-                .getCell(cellReference.col.toInt())
-    }
-
-    private fun sheet(): Pair<XSSFSheet, XSSFFormulaEvaluator> {
-        val wb = XSSFWorkbook(javaClass.getResourceAsStream("/SimpleMath.xlsx"))
-        return Pair(wb.getSheetAt(0), wb.creationHelper.createFormulaEvaluator())
-    }
-
-    private fun valueOf(evaluator: XSSFFormulaEvaluator, cell: XSSFCell): Double {
-        evaluator.evaluateFormulaCell(cell)
-        return evaluator.evaluate(cell).numberValue
+        sheet.number("D2").shouldBe(16.0)
     }
 }
