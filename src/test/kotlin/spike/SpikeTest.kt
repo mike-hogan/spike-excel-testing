@@ -11,7 +11,7 @@ class SpikeTest {
     fun `the spreadsheet defaults to 6`() {
         val sheet = TestSheet("/SimpleMath.xlsx")
 
-        sheet.number("D2").shouldBe(6.0)
+        sheet.number("D2").shouldBe(6)
     }
 
     @Test
@@ -21,6 +21,6 @@ class SpikeTest {
         sheet.set("B2", 7)
         sheet.set("C2", 9)
 
-        sheet.number("D2").shouldBe(16.0)
+        sheet.number("D2").shouldBe(16)
     }
 }
