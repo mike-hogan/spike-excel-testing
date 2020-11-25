@@ -41,9 +41,7 @@ class SpikeTest {
 
     private fun sheet(): Pair<XSSFSheet, XSSFFormulaEvaluator> {
         val wb = XSSFWorkbook(javaClass.getResourceAsStream("/SimpleMath.xlsx"))
-        val sheet = wb.getSheetAt(0)
-        val evaluator = wb.creationHelper.createFormulaEvaluator()
-        return Pair(sheet, evaluator)
+        return Pair(wb.getSheetAt(0), wb.creationHelper.createFormulaEvaluator())
     }
 
     private fun valueOf(evaluator: XSSFFormulaEvaluator, cell: XSSFCell): Double {
