@@ -17,8 +17,7 @@ class SpikeTest {
         val (sheet, evaluator) = sheet()
         val d2 = getCell(sheet, "D2")
 
-        val cellValue = evaluator.evaluate(d2)
-        cellValue.formatAsString().shouldBe("6.0")
+        valueOf(evaluator, d2).shouldBe(6.0)
     }
 
     @Test
@@ -30,9 +29,7 @@ class SpikeTest {
 
         b2.setCellValue(7.0)
         c2.setCellValue(9.0)
-        evaluator.evaluateFormulaCell(d2)
-        val cellValue = evaluator.evaluate(d2)
-        cellValue.formatAsString().shouldBe("16.0")
+        valueOf(evaluator, d2).shouldBe(16.0)
     }
 
     private fun getCell(sheet: XSSFSheet, ref: String): XSSFCell {
@@ -47,5 +44,10 @@ class SpikeTest {
         val sheet = wb.getSheetAt(0)
         val evaluator = wb.creationHelper.createFormulaEvaluator()
         return Pair(sheet, evaluator)
+    }
+
+    private fun valueOf(evaluator: XSSFFormulaEvaluator, cell: XSSFCell): Double {
+        evaluator.evaluateFormulaCell(cell)
+        return evaluator.evaluate(cell).numberValue
     }
 }
